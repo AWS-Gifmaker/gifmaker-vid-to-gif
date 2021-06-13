@@ -20,9 +20,9 @@ if not LOCAL_MODE:
 
     ssm_client = boto3.client('ssm')
     try:
-        VIDEO_FRAMES_USED = int(ssm_client.get_parameter(Name="vid-to-gif-video-frames-used"))
+        VIDEO_FRAMES_USED = int(ssm_client.get_parameter(Name="vid-to-gif-video-frames-used")['Parameter']['Value'])
         print(f"Using ssm value of VIDEO_FRAMES_USED={VIDEO_FRAMES_USED}")
-    except ssm_client.exceptions.ParameterNotFound:
+    except (ssm_client.exceptions.ParameterNotFound, KeyError) as e:
         print(f"Using default VIDEO_FRAMES_USED={VIDEO_FRAMES_USED}")
 
 
