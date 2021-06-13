@@ -18,6 +18,13 @@ VIDEO_FRAMES_USED = 20
 if not LOCAL_MODE:
     s3_client = boto3.client('s3')
 
+    ssm_client = boto3.client('ssm')
+    try:
+        VIDEO_FRAMES_USED = int(ssm_client.get_parameter(Name="vid-to-gif-video-frames-used"))
+        print(f"Using ssm value of VIDEO_FRAMES_USED={VIDEO_FRAMES_USED}")
+    except ssm_client.exceptions.ParameterNotFound:
+        print(f"Using default VIDEO_FRAMES_USED={VIDEO_FRAMES_USED}")
+
 
 def create_gif(source_path: str, target_path: str):
     print(f"START Analyzing new video, path: {source_path}")
